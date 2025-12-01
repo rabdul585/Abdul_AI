@@ -1,0 +1,4 @@
+set POSTGRES_URL=postgresql://rag_user:rag_password@localhost:5432/rag_db
+set OPENAI_API_KEY=
+set OPENAI_MODEL=gpt-4.1-mini
+set OPENAI_EMBEDDING_MODEL=text-embedding-3-small

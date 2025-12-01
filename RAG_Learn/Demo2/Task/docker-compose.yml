@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: rag-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rag_user
+      POSTGRES_PASSWORD: rag_password
+      POSTGRES_DB: rag_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  rag-backend:
+    build: .
+    container_name: rag-backend
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      # TODO: adjust if you change DB credentials or host
+      POSTGRES_URL: postgresql://rag_user:rag_password@postgres:5432/rag_db
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4.1-mini
+      OPENAI_EMBEDDING_MODEL: text-embedding-3-small
+      # Optional: tune chunking & retrieval
+      CHUNK_SIZE: "800"
+      CHUNK_OVERLAP: "150"
+      TOP_K: "5"
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "rag_backend:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  rag-ui:
+    build: .
+    container_name: rag-ui
+    restart: unless-stopped
+    depends_on:
+      - rag-backend
+    environment:
+      # Inside Docker network, backend is reachable at http://rag-backend:8000
+      BACKEND_URL: http://rag-backend:8000
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "ui_app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+
+volumes:
+  pgdata:
