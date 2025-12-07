@@ -1,0 +1,229 @@
+{
+  "name": "Poster creation",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.result }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "56b550fd-9952-4b1f-b3f5-6ec9dc5a89a5",
+      "name": "HTTP Request",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        -32
+      ],
+      "id": "18309415-d772-48b6-a790-0becffe43621",
+      "name": "Send a photo message",
+      "webhookId": "182b523f-62b0-48c9-a716-a33ad063d94f",
+      "credentials": {
+        "telegramApi": {
+          "id": "at4NQwEIrgStjQSG",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "chatId": "-5030317981"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "4b8a0fd6-04f6-4b9b-ad68-3003fb71326d",
+      "name": "Get a chat",
+      "webhookId": "596960c1-a418-4822-a7a8-6ef5df91c57a",
+      "credentials": {
+        "telegramApi": {
+          "id": "at4NQwEIrgStjQSG",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "channel",
+        "operation": "history",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A1ZHQBFC2",
+          "mode": "list",
+          "cachedResultName": "all-abduls-workspace"
+        },
+        "limit": 1,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        368,
+        288
+      ],
+      "id": "f4a58170-c49c-4b9d-bdc7-8c1893cd22a7",
+      "name": "Get the history of a channel",
+      "webhookId": "339667c7-460e-4822-a218-6058a0369039",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "7CJN36YxSSphb1kO",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        288
+      ],
+      "id": "b3592d7c-bc32-423a-a2cc-1aad42ff6f6c",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "M5f7hHyE4dbAmJ6t",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "options": {
+          "channelId": "C0A1ZHQBFC2",
+          "fileName": "={{ $json.fileName }}"
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        800,
+        288
+      ],
+      "id": "4cf08290-f322-4fb8-b92d-2bc11ddb4d8a",
+      "name": "Upload a file",
+      "webhookId": "5d51dc37-7705-469c-bd81-f83c9b6ca4bc",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "bOtjfGEVjyA25BVK",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        192,
+        288
+      ],
+      "id": "47efa7f5-aecf-4fc0-b1ff-dea459b8791b",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "Get a chat": {
+      "main": [
+        []
+      ]
+    },
+    "Get the history of a channel": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get the history of a channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5f2cf95b-dcd0-4db5-85ce-64a74d103c5e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "af43725408d4db7480dbfb2b0063cf37ca6e9f127486ce44e7f3a0e2dd913797"
+  },
+  "id": "Zc6hEHlL6JQt55Cr",
+  "tags": []
+}
