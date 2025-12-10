@@ -1,0 +1,238 @@
+{
+  "name": "Gmail_Worklfow & Create Event",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Workflow notes\n**Double click** to edit me. \nGoogle OAuth2(recommended) -> go to Google -> Google cloud console -> click on first link to open console.cloud.google.com -> sign in with your gmail and password. New project -> project name -> organisation -> enter Go to left side menu (4 horizontal lines) -> Enabled API & Seevices -> now, we are going to enable 5 x Google related services, starting with - gmail api, Google drive api, Google docs, Google sheets, Google calendar -> enable all the 5 -> you will get enabled notifications. Now go to credentials (from the left side menu)-> create credential->OAuth client ID -> configure consent screen -> Get started. Project Configuration -> 1. App Information -> app name -> dripemaildemo, user support email -> give your organisation email. 2. Audience -> Internal (only for organisations), External (available to any test user) -> Next 3. Contact Information-> email addresses ->give your personal email(or any email you need to get access to) 4. Finish -> I agree to Google API services UDP -> continue -> create -> OAuth configuration created! Metrics -> Create OAuth client -> create OAuth client ID -> application type - web application, name -> dripemailschedulerdemo -> enter OAuth client created -> client ID and client secret. -> copy both and save somewhere -> click ok(from June 2025) won’t be able to change it. Now, we have to establish a connection from n8n -> gmail(Google). In the n8n workflow -> on Gmail node -> send a message -> credentials-> create new credential-> copy the redirect url link -> go to Google console cloud -> click on the OAuth client created name - deipemailscheduler -> go to -> Authorised redirect URIs -> Add URIs -> paste the link here from n8n -> now copy the client ID and client secret and go to n8n workflow -> paste it in client ID and client secret. Go back to google console -> audience -> test user -> add users -> give the email you want to access -> save. Go back to n8n -> inside the gmail node -> connect with Google -> choose the email that you need to connect -> message to say this app not verified -> continue -> hater. Cloud wants to access -> select all -> continue -> n8n - gmail connection successful - YAY - in n8n -> Account connected (green). Now you can fill in -> to address, subject, message -> add options if you want to add attachments, etc. -> execute step -> output -> sent. Check your Gmail inbox -> you would have received the email from the newly created OAuth2 client. This is how you have to do for every other external application to setup OAuth2 - Client ID and Client Secret.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -464,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "ef36dfef-5442-436b-b290-6ed127d4e369",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "acc892bd-e172-4e6f-be0c-0a9b8ae4fee4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "sendTo": "rabdul585@gmail.com",
+        "subject": "N8n_Demo",
+        "emailType": "text",
+        "message": "Hi, this is your first automation",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "58ad93b9-a93a-4948-84bd-749c98e3b46d",
+      "name": "rabdul585@gmail.com",
+      "webhookId": "f6af5ec8-ab24-4839-b4c2-8d07a65b065f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PH8fgOQPY9rrTBtM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "N8n_Socialeagle",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "89238615-c9ca-41ba-bf27-e12972c83218",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "45iRnYcenW3rfvin",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1pNWqQCiDOyXapqGwEbOR2yhJ8A71m0WJ",
+        "title": "n8n_demo doc"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "60b89c88-abac-40e0-8997-00eb4b2d5a4c",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "mdtXYliczeNSD1ZM",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "1AM00-4qjCOWRQFBP6TzhCCkkApdUGS-Kd0EkLuDd2po",
+          "mode": "list",
+          "cachedResultName": "n8n_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AM00-4qjCOWRQFBP6TzhCCkkApdUGS-Kd0EkLuDd2po/edit?usp=drivesdk"
+        },
+        "title": "={{ `${d=new Date(),d.getDate().toString().padStart(2,'0')}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}${d.getMinutes().toString().padStart(2,'0')}${d.getSeconds().toString().padStart(2,'0')}`\n }} Testing time",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        208
+      ],
+      "id": "967bee5d-8c95-4057-b620-6949082de39c",
+      "name": "Create sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2GqFqNEbTUUmCJ1l",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "rabdul585@gmail.com",
+          "mode": "list",
+          "cachedResultName": "rabdul585@gmail.com"
+        },
+        "start": "2025-12-06T16:17:24",
+        "end": "[DateTime: 2025-12-04T17:22:04.644+05:30]",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "attendees": [
+            "abdul.ai2807@gmail.com",
+            "abdul.ai2806@gmail.com",
+            "rabdul585@gmail.com"
+          ],
+          "description": "meeting",
+          "location": "Chennai"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        0
+      ],
+      "id": "a51e6027-08b9-4711-92e8-913efc9ca052",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "dRRVAmb0OYXoHL64",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "rabdul585@gmail.com",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rabdul585@gmail.com": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "2b0fb183-3494-460b-80ad-91bcd580b534",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "af43725408d4db7480dbfb2b0063cf37ca6e9f127486ce44e7f3a0e2dd913797"
+  },
+  "id": "IAhFlWpuaTbhzLLW",
+  "tags": []
+}

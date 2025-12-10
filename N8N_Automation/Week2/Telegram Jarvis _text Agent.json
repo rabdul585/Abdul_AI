@@ -1,0 +1,580 @@
+{
+  "name": "Telegram Jarvis _text Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        288
+      ],
+      "id": "1f726376-f3ba-47f0-b94f-4f9653a1fe6d",
+      "name": "Telegram Trigger",
+      "webhookId": "75789d5e-b785-4d32-8e3b-0d8539bfbd76",
+      "credentials": {
+        "telegramApi": {
+          "id": "1F2ovT6pAhKpHXum",
+          "name": "N8nabdul_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Reply the user message with your intelligence {{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are an intelligent and friendly personal assistant designed to process and respond to both text and audio messages in Telegram.\nYour primary goal is to assist {{userName}} in a natural, polite, and context-aware way.\nYou are capable of using connected tools when required to complete user tasks.\n\n🎧 Input Handling Rules:\n\nIf the user sends an audio message:\n\nAssume it has already been transcribed to text.\n\nRead the transcribed text carefully and understand the intent.\n\nGenerate a well-structured, natural-language response.\n\nIf audio output is enabled, provide your final response in both text and audio formats.\n(Use a conversational tone, as if you’re speaking directly to {{userName}}.)\n\nIf the user sends a text message:\n\nProcess the text directly as the user’s request or question.\n\nReply normally in text, but if the system supports TTS (Text-to-Speech), you may also produce an audio version of your reply.\n\nAlways detect the type of input (audio or text) and tailor your tone and style appropriately:\n\nFor audio-based responses, use short, natural sentences and a friendly, spoken rhythm.\n\nFor text-based responses, be clear, well-formatted, and structured."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        352,
+        320
+      ],
+      "id": "0ab5136e-eafc-40a7-937c-0f6f19520eb9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        144
+      ],
+      "id": "c429a48f-8b22-4ff4-a0e2-0e471a53bbad",
+      "name": "Fetch the audio from telegram",
+      "webhookId": "6aed90c7-f22a-4ffe-9dd7-00e7a5f5c3e8",
+      "credentials": {
+        "telegramApi": {
+          "id": "1F2ovT6pAhKpHXum",
+          "name": "N8nabdul_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        560
+      ],
+      "id": "46b500b6-ee55-4752-a098-95646e772892",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "M5f7hHyE4dbAmJ6t",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=Telegram_{{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        592
+      ],
+      "id": "e4e4ac42-5046-49e4-ba65-5dcf38669d0e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        368,
+        608
+      ],
+      "id": "4faecd1c-0113-43d9-9caf-9190f560e3f5",
+      "name": "Google search in SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "dFIFbN98o4E5gIVg",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        528,
+        576
+      ],
+      "id": "43eb279b-8516-472e-bbec-292cdae452b9",
+      "name": "Send a message in Gmail",
+      "webhookId": "86491bda-4b0d-4772-9a0a-2f389e0cedb6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PH8fgOQPY9rrTBtM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2cf11ac0-dbb4-4cbf-b018-761825af9494",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        144
+      ],
+      "id": "1c58b34a-0027-4bce-b5d1-e835279eda02",
+      "name": "Audio Var"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c6d837df-af74-4600-ae4b-797087878dc4",
+              "name": "text",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        352
+      ],
+      "id": "d7fddb21-6880-469a-a58f-fa31913c1763",
+      "name": "Text Var"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        576
+      ],
+      "id": "f89dd120-3851-48d4-b9ed-e8f37d448f0f",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "M5f7hHyE4dbAmJ6t",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "={{ $json.message.voice.file_id }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "8c5ffc6f-d1a9-485b-8766-7cb7fa83a03e"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "VoiceConditionSatisfied"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5e71d227-2f01-458b-b698-b23e87f051d0",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TextConditionSatisfied"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -400,
+        288
+      ],
+      "id": "3a230e99-9bdf-4242-a2c9-d6ecdf3b97b5",
+      "name": "Voice or Text Message"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Summarize the input with high accuracy, ensuring clarity and conciseness. Focus on delivering a contextually rick summary that is optimised for speech synthesis. Remove redundant phrases, introductory statement and closing remarks \nthe output should be natural and engaging for an audio format"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        704,
+        352
+      ],
+      "id": "17e0eb0e-d7e2-4d4f-a475-499f835f0853",
+      "name": "Basic LLM Chain for Summarizing the text for audio"
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1232,
+        368
+      ],
+      "id": "001e5aa3-3ac5-485a-b31e-a16b24891fa2",
+      "name": "Send Audio Output to Telegram",
+      "webhookId": "3fc45783-599c-4a8b-a20c-6f70bd1b80b5",
+      "credentials": {
+        "telegramApi": {
+          "id": "1F2ovT6pAhKpHXum",
+          "name": "N8nabdul_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        160
+      ],
+      "id": "f1686f4e-ec25-4dea-8e6f-ba6a25bbabe5",
+      "name": "Send a text message",
+      "webhookId": "a6bd1c94-1462-4f00-a388-d946f6e25e2f",
+      "credentials": {
+        "telegramApi": {
+          "id": "1F2ovT6pAhKpHXum",
+          "name": "N8nabdul_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fb5a3dd1-1a22-4cde-a373-687cdd50ed57",
+      "name": "STT_Transcribe",
+      "credentials": {
+        "openAiApi": {
+          "id": "M5f7hHyE4dbAmJ6t",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        368
+      ],
+      "id": "8f6b72c0-d07c-41be-89bf-15cae687d1a6",
+      "name": "TTS_Generate Audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "M5f7hHyE4dbAmJ6t",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Voice or Text Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch the audio from telegram": {
+      "main": [
+        [
+          {
+            "node": "STT_Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google search in SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Var": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Var": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain for Summarizing the text for audio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain for Summarizing the text for audio",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice or Text Message": {
+      "main": [
+        [
+          {
+            "node": "Fetch the audio from telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Var",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain for Summarizing the text for audio": {
+      "main": [
+        [
+          {
+            "node": "TTS_Generate Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STT_Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Audio Var",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TTS_Generate Audio": {
+      "main": [
+        [
+          {
+            "node": "Send Audio Output to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "95409790-8f74-4d16-ac8f-24c5c586b061",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "af43725408d4db7480dbfb2b0063cf37ca6e9f127486ce44e7f3a0e2dd913797"
+  },
+  "id": "bl7TwnQ0Uhd3EGQg",
+  "tags": []
+}
