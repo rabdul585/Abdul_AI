@@ -1,0 +1,15 @@
+Write a prompt for the following: "Help me create a detailed action plan for the following requirements: You are a expert level solution architect in python. I want to build a AI IT Support Ticket Multi Agent project based on Autogen framework. 
+Agent Types:
+User Agent: Asks Question to the application to get the resolution.
+Classifier Agent: Classifies the question into different categories.
+Notification Agent: Sends notification to the user, for both When user query gets resolved. If user query is not resolved then notify the user with the support ticket created. This support ticket is send to Developement team for the resolution.
+Knowledge Base Agent: When user asks the question, it will search the knowledge base and return the answer to the user. 
+
+Preferred tech Stack: 
+Embedding model: Open AI 
+Framework: Autogen 
+User Interface: Streamlit
+
+
+Project Specification:
+.env file to secure all secrets and environment variables. user a requiremets.txt to list all dependencies needed to run the project. Provide a quickstart.md document describing setup steps and instuctions for running and using the application. Provide Technical worklow.md document describing the complete architectural and data flow of the system. Please update the plan to incorporate the UI Improvements as well "

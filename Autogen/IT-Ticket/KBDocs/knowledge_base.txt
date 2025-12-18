@@ -1,0 +1,115 @@
+========================================
+KB_ID: KB-NET-001
+CATEGORY: Network
+TITLE: Unable to connect to office Wi-Fi
+DESCRIPTION:
+Users are unable to connect to the corporate Wi-Fi network.
+
+TROUBLESHOOTING STEPS:
+1. Verify that Wi-Fi is enabled on the device.
+2. Confirm the correct SSID is selected.
+3. Restart the Wi-Fi adapter.
+4. Forget the network and reconnect.
+5. Check if VPN is blocking the connection.
+6. Contact IT if the issue persists.
+
+RESOLUTION:
+Most connectivity issues are resolved by reconnecting to the network or restarting the adapter.
+
+========================================
+KB_ID: KB-SW-001
+CATEGORY: Software
+TITLE: Application crashes on startup
+DESCRIPTION:
+The application closes immediately after launching.
+
+TROUBLESHOOTING STEPS:
+1. Restart the application.
+2. Check for available updates.
+3. Clear application cache.
+4. Reinstall the application.
+5. Verify system compatibility.
+
+RESOLUTION:
+Updating or reinstalling the application usually resolves startup crashes.
+
+========================================
+KB_ID: KB-AUTH-001
+CATEGORY: Access / Authentication
+TITLE: Forgot system password
+DESCRIPTION:
+User is unable to log in due to a forgotten password.
+
+TROUBLESHOOTING STEPS:
+1. Click on “Forgot Password” on the login screen.
+2. Verify identity using registered email or phone.
+3. Reset password following policy guidelines.
+4. Ensure CAPS LOCK is off while entering the password.
+
+RESOLUTION:
+Password reset restores access in most cases.
+
+========================================
+KB_ID: KB-HW-001
+CATEGORY: Hardware
+TITLE: Laptop not powering on
+DESCRIPTION:
+Laptop does not turn on when pressing the power button.
+
+TROUBLESHOOTING STEPS:
+1. Connect the charger and verify power source.
+2. Check for charging indicator lights.
+3. Perform a hard reset (hold power button for 15 seconds).
+4. Remove external devices.
+5. Contact hardware support.
+
+RESOLUTION:
+Power issues are often related to battery or adapter failures.
+
+========================================
+KB_ID: KB-PERF-001
+CATEGORY: Performance
+TITLE: System running very slow
+DESCRIPTION:
+User reports sluggish system performance.
+
+TROUBLESHOOTING STEPS:
+1. Restart the system.
+2. Check CPU and memory usage.
+3. Close unnecessary applications.
+4. Run antivirus and malware scans.
+5. Ensure sufficient disk space.
+
+RESOLUTION:
+Closing background processes and restarting improves performance.
+
+========================================
+KB_ID: KB-SEC-001
+CATEGORY: Security
+TITLE: Suspicious email or phishing attempt
+DESCRIPTION:
+User received an email requesting sensitive information.
+
+TROUBLESHOOTING STEPS:
+1. Do not click any links or attachments.
+2. Verify sender email address carefully.
+3. Report the email to IT security.
+4. Delete the email after reporting.
+
+RESOLUTION:
+Early reporting helps prevent security incidents.
+
+========================================
+KB_ID: KB-UNK-001
+CATEGORY: Unknown
+TITLE: Issue not categorized
+DESCRIPTION:
+User issue does not match any predefined category.
+
+TROUBLESHOOTING STEPS:
+1. Gather additional details from the user.
+2. Ask clarifying questions.
+3. Escalate to support if needed.
+
+RESOLUTION:
+Manual intervention required.

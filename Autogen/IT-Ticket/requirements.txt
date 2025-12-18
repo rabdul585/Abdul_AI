@@ -1,0 +1,7 @@
+python-dotenv
+streamlit
+pyautogen
+openai
+chromadb
+pandas
+google-search-results
