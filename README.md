@@ -1,2 +1,2 @@
-# AI-Learning-Dumps
+# AI-Learning
 AI-Learning Journey Documents
